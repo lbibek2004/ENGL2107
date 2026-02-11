@@ -7,6 +7,6 @@ export default defineConfig({
   // from a sub-path such as GitHub Pages (e.g., https://user.github.io/repo/).
   // Without this, the built HTML pointed to /assets/* at the domain root and
   // the page appeared blank.
-  base: './',
+  base: '/ENGL2107/',
   plugins: [react()],
 })
