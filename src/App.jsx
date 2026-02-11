@@ -14,12 +14,12 @@ import RedProfile from './assets/ProfileIcons/RedProfile.png'
 import YellowProfile from './assets/ProfileIcons/YellowProfile.png'
 
 const profiles = [
-  { name: 'Medium', img: BlueProfile },
-  { name: 'Maddie', img: GreyProfile },
-  { name: 'Bryce', img: LimeProfile },
-  { name: 'Emma', img: PurpleProfile },
-  { name: 'AI', img: RedProfile },
-  { name: 'Bibek', img: YellowProfile },
+  { name: 'Medium', img: BlueProfile, href: "#" },
+  { name: 'Maddie', img: GreyProfile, href: "#applying" },
+  { name: 'Bryce', img: LimeProfile, href: "#medium" },
+  { name: 'Emma', img: PurpleProfile, href: "#through" },
+  { name: 'AI', img: RedProfile, href: "#" },
+  { name: 'Bibek', img: YellowProfile, href: "#implications" },
 ]
 
 const conceptCards = [
@@ -222,10 +222,27 @@ function IntroOverlay({ show, onClose }) {
 
 function App() {
   const [showIntro, setShowIntro] = useState(true)
+  const [showSidebar, setShowSidebar] = useState(false)
+  const heroRef = useRef(null)
 
   useEffect(() => {
     const fallback = setTimeout(() => setShowIntro(false), 12000)
     return () => clearTimeout(fallback)
+  }, [])
+
+  useEffect(() => {
+    const target = heroRef.current
+    if (!target) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowSidebar(!entry.isIntersecting)
+      },
+      { threshold: 0.25 }
+    )
+
+    observer.observe(target)
+    return () => observer.disconnect()
   }, [])
 
   return (
@@ -249,7 +266,7 @@ function App() {
       </header>
 
       <main>
-        <section className="hero" id="hero">
+        <section className="hero" id="hero" ref={heroRef}>
           <motion.div
             className="hero-copy"
             initial="hidden"
@@ -275,7 +292,7 @@ function App() {
                   whileHover={{ y: -6, scale: 1.03 }}
                   transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                 >
-                  <img src={profile.img} alt={profile.name} />
+                  <a href={profile.href}><img src={profile.img} alt={profile.name} /></a>
                   <span>{profile.name}</span>
                 </motion.div>
               ))}
@@ -362,6 +379,37 @@ function App() {
           gradient="180deg, rgba(5,5,5,0.94), rgba(15,15,15,0.68)"
         />
       </main>
+
+      <AnimatePresence>
+        {showSidebar && (
+          <motion.aside
+            className="profile-sidebar"
+            initial={{ x: 140, opacity: 0, scale: 0.9 }}
+            animate={{ x: 0, opacity: 1, scale: 1 }}
+            exit={{ x: 140, opacity: 0, scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+          >
+            <div className="sidebar-profiles">
+              {profiles.map((profile, index) => (
+                <a key={profile.name} href={profile.href} className="sidebar-profile" aria-label={profile.name} title={profile.name}>
+                  <motion.img
+                    src={profile.img}
+                    alt={profile.name}
+                    whileHover={{ scale: 1.06, rotate: -2 }}
+                    transition={{ type: 'spring', stiffness: 280, damping: 16 }}
+                  />
+                  <motion.span
+                    className="pop-dot"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.08 * index, type: 'spring', stiffness: 340, damping: 14 }}
+                  />
+                </a>
+              ))}
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
 
       <footer className="footer">
         <div className="brand">
