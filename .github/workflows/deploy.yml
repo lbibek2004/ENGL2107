@@ -4,17 +4,25 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: write   # allow pushing gh-pages
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 20
+          cache: npm
       - run: npm ci
       - run: npm run build
+      - run: cp dist/index.html dist/404.html   # SPA fallback
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          force_orphan: true
