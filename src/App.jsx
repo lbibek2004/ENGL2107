@@ -367,6 +367,8 @@ function App() {
         <div className="brand">
           <img src={logo} alt="logo" />
           <span>Thanks for watching.</span>
+          <span><a href="https://quod.lib.umich.edu/m/mij/15031809.0002.206/--tv-got-better-netflixs-original-programming-strategies?rgn=main;view=fulltext">umich</a></span>
+          <span><a href="https://marissapeloso.wordpress.com/2017/11/07/netflix-tetrad-of-media-effects/">marissapeloso</a></span>
         </div>
         <p className="mini">© 2026 Bibek Luitel</p>
       </footer>
